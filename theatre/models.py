@@ -73,6 +73,14 @@ class Performance(models.Model):
 
     def __str__(self) -> str:
         return f"{self.play} at {self.theatre_hall} at {self.show_time}"
+    
+
+class Prop(models.Model):
+    name = models.CharField(max_length=255)
+    performance = models.ManyToManyField(Performance, blank=True)
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Reservation(models.Model):
