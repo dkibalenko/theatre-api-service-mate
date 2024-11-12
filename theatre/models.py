@@ -26,11 +26,11 @@ class Genre(models.Model):
         return self.name
 
 
-def movie_image_file_path(instance, filename):
+def play_image_file_path(instance, filename) -> str:
     _, extension = os.path.splitext(filename)
     filename = f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
 
-    return os.path.join("uploads/movies/", filename)
+    return os.path.join("uploads/plays/", filename)
 
     
 class Play(models.Model):
@@ -38,7 +38,7 @@ class Play(models.Model):
     description = models.TextField()
     genre = models.ManyToManyField(Genre, blank=True)
     actors = models.ManyToManyField(Actor, blank=True)
-    image = models.ImageField(null=True, upload_to=movie_image_file_path)
+    image = models.ImageField(null=True, upload_to=play_image_file_path)
 
     def __str__(self) -> str:
         return self.title
