@@ -18,7 +18,7 @@ class GenreSerializer(serializers.ModelSerializer):
 class PlaySerializer(serializers.ModelSerializer):
     class Meta:
         model = Play
-        fields = ("id", "title", "description", "genre", "actors")
+        fields = ("id", "title", "description", "genres", "actors")
 
 
 class PlayListSerializer(serializers.ModelSerializer):
