@@ -2,7 +2,7 @@ from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
-from theatre.models import Actor, Genre, Play
+from theatre.models import Actor, Genre, Play, TheatreHall
 from theatre.serializers import (
     ActorSerializer,
     GenreSerializer,
@@ -10,6 +10,7 @@ from theatre.serializers import (
     PlayListSerializer,
     PlayDetailSerializer,
     PlayImageSerializer,
+    TheatreHallSerializer,
 )
 
 
@@ -78,3 +79,8 @@ class PlayViewSet(viewsets.ModelViewSet):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TheatreHallViewSet(viewsets.ModelViewSet):
+    queryset = TheatreHall.objects.all()
+    serializer_class = TheatreHallSerializer
