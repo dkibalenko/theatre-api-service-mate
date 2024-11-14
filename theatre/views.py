@@ -2,7 +2,14 @@ from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
-from theatre.models import Actor, Genre, Play, TheatreHall, Performance
+from theatre.models import (
+    Actor,
+    Genre,
+    Play,
+    TheatreHall,
+    Performance,
+    Reservation
+)
 from theatre.serializers import (
     ActorSerializer,
     GenreSerializer,
@@ -11,7 +18,8 @@ from theatre.serializers import (
     PlayDetailSerializer,
     PlayImageSerializer,
     TheatreHallSerializer,
-    PerformanceSerializer
+    PerformanceSerializer,
+    ReservationSerializer,
 )
 
 
@@ -90,3 +98,8 @@ class TheatreHallViewSet(viewsets.ModelViewSet):
 class PerformanceViewSet(viewsets.ModelViewSet):
     queryset = Performance.objects.all()
     serializer_class = PerformanceSerializer
+
+
+class ReservationViewSet(viewsets.ModelViewSet):
+    queryset = Reservation.objects.all()
+    serializer_class = ReservationSerializer
