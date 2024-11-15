@@ -133,6 +133,13 @@ class Ticket(models.Model):
                 )
 
     def clean(self) -> None:
+        """
+        Validates that the ticket's row and seat are within the range
+        defined by its performance's theatre hall.
+        
+        Raises a ValidationError if the ticket's row or seat are out of range.
+        """
+        
         Ticket.validate_ticket(
             self.row,
             self.seat,
