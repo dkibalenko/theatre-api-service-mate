@@ -93,6 +93,22 @@ class ReservationSerializer(serializers.ModelSerializer):
         fields = ("id", "created_at", "tickets")
 
     def create(self, validated_data):
+        """
+        Creates a Reservation instance along with associated Ticket instances.
+
+        This method handles the creation of a reservation and its related
+        tickets within a database transaction. The `validated_data` parameter
+        should contain all necessary data for creating a Reservation,
+        including a list of tickets. Each ticket in the list
+        will be associated with the created reservation.
+
+        Args:
+            validated_data (dict): Data validated by the serializer,
+            which includes reservation details and an iterable of ticket data.
+
+        Returns:
+            Reservation: The created Reservation instance.
+        """
         with transaction.atomic():
             tickets_data = validated_data.pop("tickets")
             reservation = Reservation.objects.create(**validated_data)
