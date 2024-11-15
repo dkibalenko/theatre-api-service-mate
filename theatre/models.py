@@ -105,7 +105,7 @@ class Ticket(models.Model):
         on_delete=models.CASCADE,
         related_name="tickets"
     )
-    reservaion = models.ForeignKey(
+    reservation = models.ForeignKey(
         Reservation,
         on_delete=models.CASCADE,
         related_name="tickets"
