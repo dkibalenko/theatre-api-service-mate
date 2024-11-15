@@ -101,6 +101,25 @@ class TicketSerializer(serializers.ModelSerializer):
         return data
 
 
+class TicketSeatsSerializer(TicketSerializer):
+    class Meta:
+        model = Ticket
+        fields = ("row", "seat")
+
+
+class PerformanceDetailSerializer(serializers.ModelSerializer):
+    play = PlayDetailSerializer(many=False, read_only=True)
+    taken_seats = TicketSeatsSerializer(
+        many=True,
+        read_only=True,
+        source="tickets",
+    )
+
+    class Meta:
+        model = Performance
+        fields = ("id", "show_time", "play", "theatre_hall", "taken_seats")
+
+
 class ReservationSerializer(serializers.ModelSerializer):
     tickets = TicketSerializer(many=True, read_only=False, allow_empty=False)
 
