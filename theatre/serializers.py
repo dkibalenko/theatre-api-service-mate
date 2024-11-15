@@ -109,6 +109,7 @@ class TicketSeatsSerializer(TicketSerializer):
 
 class PerformanceDetailSerializer(serializers.ModelSerializer):
     play = PlayDetailSerializer(many=False, read_only=True)
+    theatre_hall = TheatreHallSerializer(many=False, read_only=True)
     taken_seats = TicketSeatsSerializer(
         many=True,
         read_only=True,
