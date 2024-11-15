@@ -85,6 +85,12 @@ class TicketSerializer(serializers.ModelSerializer):
         fields = ("id", "row", "seat", "performance")
 
     def validate(self, attrs):
+        """
+        Validates that the ticket's row and seat are within the range
+        defined by its performance's theatre hall.
+        
+        Raises a ValidationError if the ticket's row or seat are out of range.
+        """
         data = super(TicketSerializer, self).validate(attrs=attrs)
         Ticket.validate_ticket(
             attrs["row"],
