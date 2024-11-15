@@ -102,11 +102,13 @@ class Ticket(models.Model):
     seat = models.IntegerField()
     performance = models.ForeignKey(
         Performance,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="tickets"
     )
     reservaion = models.ForeignKey(
         Reservation,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="tickets"
     )
 
     class Meta:
