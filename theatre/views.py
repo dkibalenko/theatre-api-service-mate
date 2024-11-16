@@ -2,6 +2,7 @@ from django.db.models import F, Count
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from theatre.models import (
     Actor,
@@ -121,12 +122,19 @@ class PerformanceViewSet(viewsets.ModelViewSet):
         return PerformanceSerializer
 
 
+class ReservationPagination(PageNumberPagination):
+    page_size = 3
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.prefetch_related(
         "tickets__performance__play",
         "tickets__performance__theatre_hall"
     )
     serializer_class = ReservationSerializer
+    pagination_class = ReservationPagination
 
     def get_queryset(self):
         queryset = self.queryset.filter(user=self.request.user)
