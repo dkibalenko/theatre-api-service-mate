@@ -122,11 +122,15 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 
 
 class ReservationViewSet(viewsets.ModelViewSet):
-    queryset = Reservation.objects.all()
+    queryset = Reservation.objects.prefetch_related(
+        "tickets__performance__play",
+        "tickets__performance__theatre_hall"
+    )
     serializer_class = ReservationSerializer
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+        queryset = self.queryset.filter(user=self.request.user)
+        return queryset
     
     def get_serializer_class(self):
         if self.action == "list":
