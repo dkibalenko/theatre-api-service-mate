@@ -22,5 +22,6 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/theatre/", include("theatre.urls")),
+    path("api/user/", include("user.urls", namespace="user")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
 + debug_toolbar_urls()
