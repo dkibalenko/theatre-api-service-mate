@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'theatre',
     'user',
-    'debug_toolbar'
+    'debug_toolbar',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -138,7 +139,8 @@ INTERNAL_IPS = [
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        # "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     )
 }
 
