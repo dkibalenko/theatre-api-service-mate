@@ -1,6 +1,6 @@
 from django.db.models import F, Count
 from rest_framework.decorators import action
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, mixins
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -29,17 +29,30 @@ from theatre.serializers import (
 )
 
 
-class ActorViewSet(viewsets.ModelViewSet):
+class ActorViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
 
 
-class GenreViewSet(viewsets.ModelViewSet):
+class GenreViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
 
-class PlayViewSet(viewsets.ModelViewSet):
+class PlayViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = Play.objects.prefetch_related("genres", "actors")
     serializer_class = PlaySerializer
 
@@ -97,7 +110,11 @@ class PlayViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class TheatreHallViewSet(viewsets.ModelViewSet):
+class TheatreHallViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = TheatreHall.objects.all()
     serializer_class = TheatreHallSerializer
 
@@ -130,7 +147,11 @@ class ReservationPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class ReservationViewSet(viewsets.ModelViewSet):
+class ReservationViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = Reservation.objects.prefetch_related(
         "tickets__performance__play",
         "tickets__performance__theatre_hall"
