@@ -154,3 +154,16 @@ SIMPLE_JWT = {
 	"REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 	"ROTATE_REFRESH_TOKENS": False
 }
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Theatre API",
+    "DESCRIPTION": "Online booking of tickets for theatre plays",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "defaultModelRendering": "model",
+        "defaultModelsExpandDepth": 2,
+        "defaultModelExpandDepth": 2
+    }
+}
