@@ -179,6 +179,24 @@ class PerformanceViewSet(viewsets.ModelViewSet):
             return PerformanceDetailSerializer
         
         return PerformanceSerializer
+    
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="date",
+                type=OpenApiTypes.DATE,
+                description="Filter performance by date",
+            ),
+            OpenApiParameter(
+                name="play",
+                type=OpenApiTypes.INT,
+                description="Filter performance by play",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        """ Get a list of all available performance """
+        return super().list(request, *args, **kwargs)
 
 
 class ReservationPagination(PageNumberPagination):
