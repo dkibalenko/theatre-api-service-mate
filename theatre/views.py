@@ -4,6 +4,7 @@ from rest_framework import viewsets, status, mixins
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 
 from theatre.models import (
     Actor,
@@ -108,6 +109,29 @@ class PlayViewSet(
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="title",
+                type=OpenApiTypes.STR,
+                description="Filter movies by title",
+            ),
+            OpenApiParameter(
+                name="genres",
+                type={"type": "array", "items": {"type": "number"}},
+                description="Filter movies by genre",
+            ),
+            OpenApiParameter(
+                name="actors",
+                type={"type": "array", "items": {"type": "number"}},
+                description="Filter movies by actors",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        """ Get a list of all available movies """
+        return super().list(request, *args, **kwargs)
 
 
 class TheatreHallViewSet(

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'user',
     'debug_toolbar',
     'rest_framework.authtoken',
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -145,6 +146,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "theatre.permissions.IsAdminOrIfAuthenticatedReadOnly",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = {
