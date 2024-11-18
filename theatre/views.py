@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db.models import F, Count
 from rest_framework.decorators import action
 from rest_framework import viewsets, status, mixins
@@ -155,6 +156,21 @@ class PerformanceViewSet(viewsets.ModelViewSet):
         )
     ).order_by("id")
     serializer_class = PerformanceSerializer
+
+    def get_queryset(self):
+        date = self.request.query_params.get("date")
+        play_id_str = self.request.query_params.get("play")
+
+        queryset = self.queryset
+
+        if date:
+            date = datetime.strptime(date, "%Y-%m-%d").date()
+            queryset = queryset.filter(show_time__date=date)
+
+        if play_id_str:
+            queryset = queryset.filter(play_id=int(play_id_str))
+
+        return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
