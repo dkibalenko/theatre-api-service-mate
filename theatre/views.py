@@ -116,17 +116,17 @@ class PlayViewSet(
             OpenApiParameter(
                 name="title",
                 type=OpenApiTypes.STR,
-                description="Filter movies by title",
+                description="Filter play by title",
             ),
             OpenApiParameter(
                 name="genres",
                 type={"type": "array", "items": {"type": "number"}},
-                description="Filter movies by genre",
+                description="Filter play by genre",
             ),
             OpenApiParameter(
                 name="actors",
                 type={"type": "array", "items": {"type": "number"}},
-                description="Filter movies by actors",
+                description="Filter play by actors",
             ),
         ]
     )
