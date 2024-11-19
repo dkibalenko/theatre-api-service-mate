@@ -77,7 +77,11 @@ class Performance(models.Model):
 
 class Prop(models.Model):
     name = models.CharField(max_length=255)
-    performance = models.ManyToManyField(Performance, blank=True)
+    performance = models.ManyToManyField(
+        Performance,
+        blank=True,
+        related_name="props"
+)
 
     def __str__(self) -> str:
         return self.name
