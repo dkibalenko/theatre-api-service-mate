@@ -1,7 +1,16 @@
 from django.db import transaction
 from rest_framework import serializers
 
-from theatre.models import Actor, Genre, Play, Performance, Reservation, TheatreHall, Ticket
+from theatre.models import (
+    Actor,
+    Genre,
+    Play,
+    Performance,
+    Prop,
+    Reservation,
+    TheatreHall,
+    Ticket
+)
 
 class ActorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -80,7 +89,7 @@ class PerformanceSerializer(serializers.ModelSerializer):
 
 
 class PerformanceListSerializer(serializers.ModelSerializer):
-    play_title = serializers.CharField(source="plasy.title", read_only=True)
+    play_title = serializers.CharField(source="play.title", read_only=True)
     play_image = serializers.ImageField(source="play.image", read_only=True)
     theatre_hall_name = serializers.CharField(
         source="theatre_hall.name",
