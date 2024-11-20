@@ -14,7 +14,6 @@ from theatre.models import (
 admin.site.register(Actor)
 admin.site.register(Genre)
 admin.site.register(Play)
-admin.site.register(Prop)
 admin.site.register(TheatreHall)
 admin.site.register(Reservation)
 admin.site.register(Ticket)
@@ -33,3 +32,8 @@ class PerformanceAdmin(admin.ModelAdmin):
         return ", ".join([prop.name for prop in obj.props.all()])
     
     prop_list.short_description = "Properties"
+
+
+@admin.register(Prop)
+class PropAdmin(admin.ModelAdmin):
+    list_display = ("name", "id")
