@@ -175,7 +175,7 @@ class PerformanceViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return PerformanceListSerializer
-        if self.action == "retrieve":
+        if self.action == "retrieve" or self.action in ["update", "partial_update"]:
             return PerformanceDetailSerializer
         
         return PerformanceSerializer
