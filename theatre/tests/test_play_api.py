@@ -132,3 +132,14 @@ class PlayImageUploadTest(TestCase):
         res = self.client.get(detail_url(self.play.id))
 
         self.assertIn("image", res.data)
+
+    def test_image_url_is_shown_on_play_list(self):
+        url = image_upload_url(self.play.id)
+        with tempfile.NamedTemporaryFile(suffix=".jpg") as ntf:
+            img = Image.new("RGB", (10, 10))
+            img.save(ntf, format="JPEG")
+            ntf.seek(0)
+            self.client.post(url, {"image": ntf}, format="multipart")
+        res = self.client.get(PLAY_LIST_URL)
+
+        self.assertIn("image", res.data[0].keys())
