@@ -155,3 +155,13 @@ class PlayImageUploadTest(TestCase):
         res = self.client.get(PERFORMANCE_LIST_URL)
 
         self.assertIn("play_image", res.data[0].keys())
+
+class UnauthenticatedPlayApiTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+    def test_retrieve_play_list_unauthenticated(self):
+        """Test that authentication is required for retrieving play list"""
+        res = self.client.get(PLAY_LIST_URL)
+
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
