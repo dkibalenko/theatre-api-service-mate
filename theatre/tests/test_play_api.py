@@ -121,3 +121,14 @@ class PlayImageUploadTest(TestCase):
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         play = Play.objects.get(title="Title")
         self.assertFalse(play.image)
+
+    def test_image_url_is_shown_on_play_detail(self):
+        url = image_upload_url(self.play.id)
+        with tempfile.NamedTemporaryFile(suffix=".jpg") as ntf:
+            img = Image.new("RGB", (10, 10))
+            img.save(ntf, format="JPEG")
+            ntf.seek(0)
+            self.client.post(url, {"image": ntf}, format="multipart")
+        res = self.client.get(detail_url(self.play.id))
+
+        self.assertIn("image", res.data)
