@@ -10,7 +10,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 
 from theatre.models import Play, Genre, Actor, Performance, TheatreHall
-from theatre.serializers import PlayListSerializer
+from theatre.serializers import PlayListSerializer, PlayDetailSerializer
 
 PLAY_LIST_URL = reverse("theatre:play-list")
 PERFORMANCE_LIST_URL = reverse("theatre:performance-list")
@@ -226,6 +226,17 @@ class AuthenticatedPlayApiTests(TestCase):
 
         plays = Play.objects.filter(actors__id=1)
         serializer = PlayListSerializer(plays, many=True)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, serializer.data)
+
+    def test_retrieve_play_detail_endpoint(self):
+        """Test retrieving play detail"""
+        play = sample_play(title="Play 1")
+
+        res = self.client.get(detail_url(play.id))
+
+        serializer = PlayDetailSerializer(play)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
