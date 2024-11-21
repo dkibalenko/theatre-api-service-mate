@@ -188,3 +188,16 @@ class AuthenticatedPlayApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
+
+    def test_retrieve_play_list_endpoint_with_filtered_by_title(self):
+        """Test retrieving plays filtered by title"""
+        sample_play(title="Play 1")
+        sample_play(title="Play 2")
+
+        res = self.client.get(PLAY_LIST_URL, data={"title": "Play 1"})
+
+        plays = Play.objects.filter(title="Play 1")
+        serializer = PlayListSerializer(plays, many=True)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, serializer.data)
