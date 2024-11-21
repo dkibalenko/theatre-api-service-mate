@@ -11,6 +11,8 @@ from rest_framework import status
 
 from theatre.models import Play, Genre, Actor, Performance, TheatreHall
 
+PLAY_LIST_URL = reverse("theatre:play-list")
+
 
 def sample_play(**params):
     defaults = {
@@ -90,3 +92,10 @@ class PlayImageUploadTest(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn("image", res.data)
         self.assertTrue(os.path.exists(self.play.image.path))
+
+    def test_upload_image_bad_request(self):
+        """Test uploading an invalid image"""
+        url = image_upload_url(self.play.id)
+        res = self.client.post(url, {"image": "not image"}, format="multipart")
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
