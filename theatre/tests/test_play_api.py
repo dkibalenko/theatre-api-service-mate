@@ -1,0 +1,78 @@
+import os
+import tempfile
+
+from PIL import Image
+from django.test import TestCase
+from django.contrib.auth import get_user_model
+from django.urls import reverse
+
+from rest_framework.test import APIClient
+from rest_framework import status
+
+from theatre.models import Play, Genre, Actor, Performance, TheatreHall
+
+
+def sample_play(**params):
+    defaults = {
+        "title": "Test title play",
+        "description": "Test play description"
+    }
+    defaults.update(params)
+
+    return Play.objects.create(**defaults)
+
+
+def sample_genre(**params):
+    defaults = {
+        "name": "Drama",
+    }
+    defaults.update(params)
+
+    return Genre.objects.create(**defaults)
+
+
+def sample_actor(**params):
+    defaults = {"first_name": "Benny", "last_name": "Hill"}
+    defaults.update(params)
+
+    return Actor.objects.create(**defaults)
+
+
+def sample_performance(**params):
+    theatre_hall = TheatreHall.objects.create(
+        name="Test theatre hall", rows=20, seats_in_row=20
+    )
+
+    defaults = {
+        "show_time": "2022-06-02 14:00:00",
+        "play": None,
+        "theatre_hall": theatre_hall,
+    }
+    defaults.update(params)
+
+    return Performance.objects.create(**defaults)
+
+
+def image_upload_url(play_id):
+    """Return URL for play image upload"""
+    return reverse("theatre:play-upload-image", args=[play_id])
+
+def detail_url(play_id):
+    return reverse("theatre:play-detail", args=[play_id])
+
+
+class PlayImageUploadTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_superuser(
+            email="admin@admin.com",
+            password="password"
+        )
+        self.client.force_authenticate(self.user)
+        self.play = sample_play()
+        self.genre = sample_genre()
+        self.actor = sample_actor()
+        self.performance = sample_performance(play=self.play)
+
+    def tearDown(self):
+        self.play.image.delete()
