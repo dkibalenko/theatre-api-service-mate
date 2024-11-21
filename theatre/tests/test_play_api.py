@@ -240,3 +240,13 @@ class AuthenticatedPlayApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
+
+    def test_create_play_forbidden(self):
+        """Test creating a play is forbidden"""
+        payload = {
+            "title": "Play 1",
+            "description": "Test description 1"
+        }
+        res = self.client.post(PLAY_LIST_URL, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
