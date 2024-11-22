@@ -161,6 +161,10 @@ class UnauthenticatedPlayApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
 
+    def test_play_string_representation(self):
+        play = sample_play()
+        self.assertEqual(str(play), "Test title play")
+
     def test_retrieve_play_list_unauthenticated(self):
         """Test that authentication is required for retrieving play list"""
         res = self.client.get(PLAY_LIST_URL)
