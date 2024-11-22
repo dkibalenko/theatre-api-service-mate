@@ -297,3 +297,10 @@ class AdminPlayApiTests(TestCase):
         res = self.client.put(detail_url(play.id), payload)
 
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_delete_play_forbidden(self):
+            """Test deleting a play is forbidden"""
+            play = sample_play(title="Play 1")
+            res = self.client.delete(detail_url(play.id))
+
+            self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
