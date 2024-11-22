@@ -40,13 +40,10 @@ class Play(models.Model):
     actors = models.ManyToManyField(Actor, blank=True)
     image = models.ImageField(null=True, upload_to=play_image_file_path)
 
-    def __str__(self) -> str:
-        return self.title
-
     class Meta:
         ordering = ["title"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.title
     
 
