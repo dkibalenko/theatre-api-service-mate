@@ -44,3 +44,9 @@ class UnauthenticatedPerformanceApiTests(TestCase):
             f"{performance.play} at {performance.theatre_hall} "
             f"at {performance.show_time}"
         )
+
+    def test_retrieve_performances_unauthenticated(self):
+        """Test that authentication is required for retrieving performances"""
+        res = self.client.get(reverse("theatre:performance-list"))
+
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
