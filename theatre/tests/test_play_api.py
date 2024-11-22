@@ -260,3 +260,29 @@ class AdminPlayApiTests(TestCase):
         )
         self.client = APIClient()
         self.client.force_authenticate(self.user)
+
+    def test_create_play(self):
+        """Test creating a play by admin"""
+        genres = sample_genre()
+        actors = sample_actor()
+        payload = {
+            "title": "Play 2",
+            "description": "Test description 2",
+            "genres": [genres.id],
+            "actors": [actors.id],
+        }
+        res = self.client.post(PLAY_LIST_URL, payload)
+        
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        
+        play = Play.objects.get(id=res.data["id"])
+        for key in payload.keys():
+            if key in ["genres", "actors"]:
+                related_obj_ids = [
+                    related_obj.id 
+                    for related_obj 
+                    in getattr(play, key).all()
+                ]
+                self.assertEqual(related_obj_ids, payload[key])
+            else:
+                self.assertEqual(getattr(play, key), payload[key])
