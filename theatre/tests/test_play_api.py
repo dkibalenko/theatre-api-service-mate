@@ -274,7 +274,7 @@ class AdminPlayApiTests(TestCase):
         res = self.client.post(PLAY_LIST_URL, payload)
         
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-        
+
         play = Play.objects.get(id=res.data["id"])
         for key in payload.keys():
             if key in ["genres", "actors"]:
@@ -286,3 +286,14 @@ class AdminPlayApiTests(TestCase):
                 self.assertEqual(related_obj_ids, payload[key])
             else:
                 self.assertEqual(getattr(play, key), payload[key])
+
+    def test_update_play_forbidden(self):
+        """Test updating a play is forbidden"""
+        play = sample_play(title="Play 1")
+        payload = {
+            "title": "Play 2",
+            "description": "Test description 2",
+        }
+        res = self.client.put(detail_url(play.id), payload)
+
+        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
