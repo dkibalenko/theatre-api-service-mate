@@ -171,16 +171,6 @@ class PerformanceDetailSerializer(serializers.ModelSerializer):
             "taken_seats",
             "props",
         )
-
-    def create(self, validated_data):
-        with transaction.atomic():
-            props_data = validated_data.pop("props")
-            performance = Performance.objects.create(**validated_data)
-            for prop_data in props_data:
-                prop, created = Prop.objects.get_or_create(**prop_data)
-                performance.props.add(prop)
-
-        return performance
     
     def update(self, instance, validated_data):
         props_data = validated_data.pop("props")
