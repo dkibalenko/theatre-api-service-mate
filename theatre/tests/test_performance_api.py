@@ -1,10 +1,13 @@
 from django.test import TestCase
-
+from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.utils import timezone
+
 from rest_framework.test import APIClient
 from rest_framework import status
 
-from theatre.models import Performance, TheatreHall, Play
+from theatre.models import Performance, Prop, TheatreHall, Play
+from theatre.serializers import PerformanceDetailSerializer
 
 
 def sample_play(**params):
@@ -23,8 +26,8 @@ def sample_performance(**params):
     )
 
     defaults = {
-        "show_time": "2022-06-02 14:00:00",
-        "play": None,
+        "show_time": timezone.now(),
+        "play": sample_play(),
         "theatre_hall": theatre_hall,
     }
     defaults.update(params)
@@ -38,7 +41,7 @@ class UnauthenticatedPerformanceApiTests(TestCase):
         
 
     def test_performance_string_representation(self):
-        performance = sample_performance(play=sample_play())
+        performance = sample_performance()
         self.assertEqual(
             str(performance),
             f"{performance.play} at {performance.theatre_hall} "
