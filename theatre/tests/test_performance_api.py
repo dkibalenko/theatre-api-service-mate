@@ -53,3 +53,42 @@ class UnauthenticatedPerformanceApiTests(TestCase):
         res = self.client.get(reverse("theatre:performance-list"))
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+class AuthenticatedPerformanceApiTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            email="test@test.com",
+            password="testpassword"
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(self.user)
+
+        self.prop1 = Prop.objects.create(name="Prop 1")
+        self.prop2 = Prop.objects.create(name="Prop 2")
+        self.performance = sample_performance()
+        self.performance.props.set([self.prop1, self.prop2])
+
+    def test_update_performance_basic_fields(self):
+        self.assertEqual(
+            self.performance.show_time.date(),
+            timezone.now().date()
+        )
+
+        update_data = {"show_time": "2025-01-01T10:00:00Z", "props": []}
+
+        serializer = PerformanceDetailSerializer(
+            instance=self.performance,
+            data=update_data,
+            partial=True
+        )
+
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        serializer.save()
+
+        self.performance.refresh_from_db()
+        self.assertEqual(
+            self.performance.show_time.isoformat(),
+            "2025-01-01T10:00:00+00:00"
+        )
+        self.assertEqual(self.performance.props.count(), 0)
