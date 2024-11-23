@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from rest_framework.test import APIClient
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 
 from theatre.models import Performance, Prop, TheatreHall, Play
 from theatre.serializers import PerformanceDetailSerializer
@@ -112,3 +113,40 @@ class AuthenticatedPerformanceApiTests(TestCase):
             {prop.name for prop in self.performance.props.all()},
             {"Updated Prop 1", "Updated Prop 2"}
         )       
+
+    def test_update_performance_transaction_integrity(self):
+        # Update data with valid props
+        update_data = {
+            "show_time": self.performance.show_time.isoformat(),
+            "props": [{"name": "Valid Prop"}]
+        }
+
+        serializer = PerformanceDetailSerializer(
+            instance=self.performance,
+            data=update_data,
+            partial=True
+        )
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        serializer.save()
+
+        # Ensure props are updated
+        self.performance.refresh_from_db()
+        self.assertEqual(self.performance.props.count(), 1)
+
+        # Update data with invalid props to trigger rollback
+        update_data = {
+            "show_time": "invalid-date",
+            "props": [{"name": "Another Prop"}]}
+        serializer = PerformanceDetailSerializer(
+            instance=self.performance,
+            data=update_data,
+            partial=True
+        )
+        with self.assertRaises(ValidationError):
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+        # Ensure previous valid update is not rolled back
+        self.performance.refresh_from_db()
+        self.assertEqual(self.performance.props.count(), 1)
+        self.assertEqual(self.performance.props.first().name, "Valid Prop")
