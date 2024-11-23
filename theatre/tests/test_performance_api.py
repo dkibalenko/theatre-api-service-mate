@@ -92,3 +92,23 @@ class AuthenticatedPerformanceApiTests(TestCase):
             "2025-01-01T10:00:00+00:00"
         )
         self.assertEqual(self.performance.props.count(), 0)
+
+    def test_update_performance_props(self):
+        update_data = {
+            "show_time": self.performance.show_time.isoformat(),
+            "props": [{"name": "Updated Prop 1"}, {"name": "Updated Prop 2"}]}
+        
+        serializer = PerformanceDetailSerializer(
+            instance=self.performance,
+            data=update_data,
+            partial=True
+        )
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        serializer.save()
+
+        self.performance.refresh_from_db()
+        self.assertEqual(self.performance.props.count(), 2)
+        self.assertEqual(
+            {prop.name for prop in self.performance.props.all()},
+            {"Updated Prop 1", "Updated Prop 2"}
+        )       
