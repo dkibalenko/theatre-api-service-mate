@@ -9,6 +9,7 @@ from rest_framework.exceptions import ValidationError
 
 from theatre.models import Performance, Prop, TheatreHall, Play
 from theatre.serializers import PerformanceDetailSerializer
+from theatre.views import PerformanceViewSet
 
 
 def sample_play(**params):
@@ -39,7 +40,6 @@ def sample_performance(**params):
 class UnauthenticatedPerformanceApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
-        
 
     def test_performance_string_representation(self):
         performance = sample_performance()
@@ -98,7 +98,7 @@ class AuthenticatedPerformanceApiTests(TestCase):
         update_data = {
             "show_time": self.performance.show_time.isoformat(),
             "props": [{"name": "Updated Prop 1"}, {"name": "Updated Prop 2"}]}
-        
+
         serializer = PerformanceDetailSerializer(
             instance=self.performance,
             data=update_data,
@@ -112,7 +112,7 @@ class AuthenticatedPerformanceApiTests(TestCase):
         self.assertEqual(
             {prop.name for prop in self.performance.props.all()},
             {"Updated Prop 1", "Updated Prop 2"}
-        )       
+        )
 
     def test_update_performance_transaction_integrity(self):
         # Update data with valid props
@@ -150,3 +150,32 @@ class AuthenticatedPerformanceApiTests(TestCase):
         self.performance.refresh_from_db()
         self.assertEqual(self.performance.props.count(), 1)
         self.assertEqual(self.performance.props.first().name, "Valid Prop")
+
+
+class AuthenticatedPerformanceViewSetApiTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            email="test@test.com",
+            password="testpassword"
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(self.user)
+        self.play1 = sample_play(title="Play title 1")
+        self.play2 = sample_play(title="Play title 2")
+        self.performances = [
+            sample_performance(
+                show_time=f"2024-01-0{_} 12:00:00",
+                play=play
+            )
+            for _, play in zip(
+                range(1, 4), 
+                [self.play1, self.play1, self.play2]
+            )
+        ]
+
+    def test_get_queryset_no_filtering(self):
+        url = reverse("theatre:performance-list")
+        res = self.client.get(url)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 3)
