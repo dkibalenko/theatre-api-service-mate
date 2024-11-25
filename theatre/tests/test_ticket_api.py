@@ -60,3 +60,28 @@ class AuthenticatedTicketApiTests(TestCase):
                 "seat number must be in available range",
                 str(cm.exception)
             )
+
+    def test_clean_method(self):
+        # Valid ticket
+        ticket = Ticket(
+            row=5,
+            seat=10,
+            performance=self.performance,
+            reservation=self.reservation)
+        try:
+            ticket.clean()
+        except ValidationError:
+            self.fail("ValidationError raised unexpectedly for valid ticket.")
+
+        # Invalid ticket
+        ticket = Ticket(
+            row=11,
+            seat=10,
+            performance=self.performance,
+            reservation=self.reservation)
+        with self.assertRaises(ValidationError) as cm:
+            ticket.clean()
+        self.assertIn(
+            "row number must be in available range",
+            str(cm.exception)
+        )
