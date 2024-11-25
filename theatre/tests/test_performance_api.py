@@ -14,6 +14,8 @@ from theatre.serializers import (
     PerformanceSerializer
 )
 
+PERFORMANCE_LIST_URL = reverse("theatre:performance-list")
+
 
 def sample_play(**params):
     defaults = {
@@ -178,25 +180,22 @@ class AuthenticatedPerformanceViewSetApiTests(TestCase):
         ]
 
     def test_get_queryset_no_filtering(self):
-        url = reverse("theatre:performance-list")
-        res = self.client.get(url)
+        res = self.client.get(PERFORMANCE_LIST_URL)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 3)
 
     def test_get_queryset_filter_by_date(self):
-        url = reverse("theatre:performance-list")
         date = "2024-01-01"
-        res = self.client.get(url, data={"date": date})
+        res = self.client.get(PERFORMANCE_LIST_URL, data={"date": date})
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]["id"], self.performances[0].id)
 
     def test_get_queryset_filter_by_play_id(self):
-        url = reverse("theatre:performance-list")
         play_id = self.play1.id
-        res = self.client.get(url, data={"play": play_id})
+        res = self.client.get(PERFORMANCE_LIST_URL, data={"play": play_id})
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 2)
@@ -204,17 +203,22 @@ class AuthenticatedPerformanceViewSetApiTests(TestCase):
         self.assertEqual(res.data[1]["id"], self.performances[1].id)
 
     def test_get_queryset_filter_by_both_date_and_play_id(self):
-        url = reverse("theatre:performance-list")
         date = "2024-01-02"
         play_id = self.play1.id
-        res = self.client.get(url, data={"date": date, "play": play_id})
+        res = self.client.get(
+            PERFORMANCE_LIST_URL,
+            data={"date": date, "play": play_id}
+        )
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]["id"], self.performances[1].id)
 
     def test_serialzer_class_retrieve_action(self):
-        url = reverse("theatre:performance-detail", args=[self.performances[0].id])
+        url = reverse(
+            "theatre:performance-detail",
+            args=[self.performances[0].id]
+        )
         res = self.client.get(url)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         serializer = PerformanceDetailSerializer(self.performances[0])
@@ -222,8 +226,14 @@ class AuthenticatedPerformanceViewSetApiTests(TestCase):
         response_data = res.data
         serializer_data = serializer.data
 
-        response_show_time = datetime.datetime.strptime(response_data["show_time"], "%Y-%m-%dT%H:%M:%SZ")
-        serializer_show_time = datetime.datetime.strptime(serializer_data["show_time"], "%Y-%m-%d %H:%M:%S")
+        response_show_time = datetime.datetime.strptime(
+            response_data["show_time"],
+            "%Y-%m-%dT%H:%M:%SZ"
+        )
+        serializer_show_time = datetime.datetime.strptime(
+            serializer_data["show_time"],
+            "%Y-%m-%d %H:%M:%S"
+        )
 
         self.assertEqual(response_show_time, serializer_show_time)
         del response_data["show_time"]
@@ -231,7 +241,10 @@ class AuthenticatedPerformanceViewSetApiTests(TestCase):
         self.assertEqual(response_data, serializer_data)
 
     def test_get_serializer_class_update_action(self):
-        url = reverse("theatre:performance-detail", kwargs={"pk": self.performances[0].id})
+        url = reverse(
+            "theatre:performance-detail",
+            kwargs={"pk": self.performances[0].id}
+        )
         data = {
             "show_time": "2024-01-04 12:00:00",
             "props": [{"name": "Updated Prop 1"}, {"name": "Updated Prop 2"}]
@@ -244,13 +257,12 @@ class AuthenticatedPerformanceViewSetApiTests(TestCase):
         self.assertEqual(res.data, serializer.data)
 
     def test_get_serializer_class_create_action(self):
-        url = reverse("theatre:performance-list")
         data = {
             "show_time": "2024-01-05 12:00:00",
             "play": 1,
             "theatre_hall": 1
         }
-        res = self.client.post(url, data, format="json")
+        res = self.client.post(PERFORMANCE_LIST_URL, data, format="json")
         performance = Performance.objects.get(show_time="2024-01-05 12:00:00")
         serializer = PerformanceSerializer(performance)
 
