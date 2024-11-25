@@ -1,3 +1,4 @@
+import datetime
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -9,7 +10,6 @@ from rest_framework.exceptions import ValidationError
 
 from theatre.models import Performance, Prop, TheatreHall, Play
 from theatre.serializers import PerformanceDetailSerializer
-from theatre.views import PerformanceViewSet
 
 
 def sample_play(**params):
@@ -156,7 +156,8 @@ class AuthenticatedPerformanceViewSetApiTests(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_user(
             email="test@test.com",
-            password="testpassword"
+            password="testpassword",
+            is_staff=True
         )
         self.client = APIClient()
         self.client.force_authenticate(self.user)
@@ -208,3 +209,20 @@ class AuthenticatedPerformanceViewSetApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]["id"], self.performances[1].id)
+
+    def test_serialzer_class_retrieve_action(self):
+        url = reverse("theatre:performance-detail", args=[self.performances[0].id])
+        res = self.client.get(url)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        serializer = PerformanceDetailSerializer(self.performances[0])
+
+        response_data = res.data
+        serializer_data = serializer.data
+
+        response_show_time = datetime.datetime.strptime(response_data["show_time"], "%Y-%m-%dT%H:%M:%SZ")
+        serializer_show_time = datetime.datetime.strptime(serializer_data["show_time"], "%Y-%m-%d %H:%M:%S")
+
+        self.assertEqual(response_show_time, serializer_show_time)
+        del response_data["show_time"]
+        del serializer_data["show_time"]
+        self.assertEqual(response_data, serializer_data)
