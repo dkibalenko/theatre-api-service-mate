@@ -188,3 +188,13 @@ class AuthenticatedPerformanceViewSetApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]["id"], self.performances[0].id)
+
+    def test_get_queryset_filter_by_play_id(self):
+        url = reverse("theatre:performance-list")
+        play_id = self.play1.id
+        res = self.client.get(url, data={"play": play_id})
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 2)
+        self.assertEqual(res.data[0]["id"], self.performances[0].id)
+        self.assertEqual(res.data[1]["id"], self.performances[1].id)
