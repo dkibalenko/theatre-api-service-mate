@@ -85,3 +85,39 @@ class AuthenticatedTicketApiTests(TestCase):
             "row number must be in available range",
             str(cm.exception)
         )
+
+    def test_save_method(self):
+        # Valid ticket
+        ticket = Ticket(
+            row=5,
+            seat=10,
+            performance=self.performance,
+            reservation=self.reservation)
+        try:
+            ticket.save()
+        except ValidationError:
+            self.fail("ValidationError raised unexpectedly \
+                    during save for valid ticket.")
+
+        # Invalid ticket
+        ticket = Ticket(
+            row=11,
+            seat=10,
+            performance=self.performance,
+            reservation=self.reservation)
+        with self.assertRaises(ValidationError) as cm:
+            ticket.save()
+        self.assertIn(
+            "row number must be in available range",
+            str(cm.exception)
+        )
+
+    def test_ticket_string_representation(self):
+        ticket = Ticket(
+            row=5,
+            seat=10,
+            performance=self.performance,
+            reservation=self.reservation
+        )
+        expected_string = f"{str(self.performance)} (row: 5, seat: 10)"
+        self.assertEqual(str(ticket), expected_string)
