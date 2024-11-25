@@ -226,3 +226,16 @@ class AuthenticatedPerformanceViewSetApiTests(TestCase):
         del response_data["show_time"]
         del serializer_data["show_time"]
         self.assertEqual(response_data, serializer_data)
+
+    def test_get_serializer_class_update_action(self):
+        url = reverse("theatre:performance-detail", kwargs={"pk": self.performances[0].id})
+        data = {
+            "show_time": "2024-01-04 12:00:00",
+            "props": [{"name": "Updated Prop 1"}, {"name": "Updated Prop 2"}]
+        }
+        res = self.client.put(url, data, format="json")
+        performance = Performance.objects.get(id=self.performances[0].id)
+        serializer = PerformanceDetailSerializer(performance)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, serializer.data)
