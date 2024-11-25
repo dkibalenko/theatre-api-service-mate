@@ -9,7 +9,10 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError
 
 from theatre.models import Performance, Prop, TheatreHall, Play
-from theatre.serializers import PerformanceDetailSerializer
+from theatre.serializers import (
+    PerformanceDetailSerializer,
+    PerformanceSerializer
+)
 
 
 def sample_play(**params):
@@ -238,4 +241,18 @@ class AuthenticatedPerformanceViewSetApiTests(TestCase):
         serializer = PerformanceDetailSerializer(performance)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, serializer.data)
+
+    def test_get_serializer_class_create_action(self):
+        url = reverse("theatre:performance-list")
+        data = {
+            "show_time": "2024-01-05 12:00:00",
+            "play": 1,
+            "theatre_hall": 1
+        }
+        res = self.client.post(url, data, format="json")
+        performance = Performance.objects.get(show_time="2024-01-05 12:00:00")
+        serializer = PerformanceSerializer(performance)
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         self.assertEqual(res.data, serializer.data)
