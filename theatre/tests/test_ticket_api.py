@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from rest_framework.test import APIClient
 
 from theatre.models import Play, Ticket, Performance, Reservation, TheatreHall
+from theatre.serializers import TicketSerializer
 
 
 class AuthenticatedTicketApiTests(TestCase):
@@ -78,7 +79,8 @@ class AuthenticatedTicketApiTests(TestCase):
             row=11,
             seat=10,
             performance=self.performance,
-            reservation=self.reservation)
+            reservation=self.reservation
+        )
         with self.assertRaises(ValidationError) as cm:
             ticket.clean()
         self.assertIn(
@@ -121,3 +123,30 @@ class AuthenticatedTicketApiTests(TestCase):
         )
         expected_string = f"{str(self.performance)} (row: 5, seat: 10)"
         self.assertEqual(str(ticket), expected_string)
+
+    def test_ticket_serializer_validate_ticket(self):
+        valid_ticket_data = {
+            "row": 5,
+            "seat": 10,
+            "performance": self.performance.id
+        }
+        serializer = TicketSerializer(data=valid_ticket_data)
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+
+        invalid_row_ticket_data = {
+            "row": 11,
+            "seat": 10,
+            "performance": self.performance.id
+        }
+        serializer = TicketSerializer(data=invalid_row_ticket_data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("row", serializer.errors)
+
+        invalid_seat_ticket_data = {
+            "row": 5,
+            "seat": 21,
+            "performance": self.performance.id
+        }
+        serializer = TicketSerializer(data=invalid_seat_ticket_data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("seat", serializer.errors)
