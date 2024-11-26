@@ -73,3 +73,9 @@ class AuthenticatedReservationApiTests(TestCase):
         serializer = ReservationSerializer(reservation)
 
         self.assertEqual(res.data, serializer.data)
+
+    def test_reservation_string_representation(self):
+        self.assertEqual(
+            str(self.reservation),
+            f"{self.reservation.created_at}"
+        )
