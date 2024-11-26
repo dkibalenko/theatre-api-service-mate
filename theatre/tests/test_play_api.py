@@ -308,3 +308,12 @@ class AdminPlayApiTests(TestCase):
         res = self.client.delete(detail_url(play.id))
 
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_actor_string_representation(self):
+        actor = sample_actor(first_name="Benny", last_name="Hill")
+        self.assertEqual(str(actor), f"{actor.first_name} {actor.last_name}")
+        self.assertEqual(actor.full_name, f"{actor.first_name} {actor.last_name}")
+
+    def test_genre_string_representation(self):
+        genre = sample_genre(name="Drama")
+        self.assertEqual(str(genre), genre.name)
