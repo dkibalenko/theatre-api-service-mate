@@ -92,3 +92,13 @@ class AuthTokenSerializerTests(APITestCase):
         )
         self.assertTrue(serializer.is_valid())
         self.assertEqual(serializer.validated_data["user"], self.user)
+
+    def test_auth_token_serializer_invalid_credentials(self):
+        serializer = AuthTokenSerializer(
+            data={
+                "email": "test@test.com",
+                "password": "wrongpassword"
+            }
+        )
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("non_field_errors", serializer.errors)
