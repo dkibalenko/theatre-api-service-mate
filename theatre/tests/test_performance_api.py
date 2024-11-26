@@ -268,3 +268,7 @@ class AuthenticatedPerformanceViewSetApiTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
         self.assertEqual(res.data, serializer.data)
+
+    def test_prop_string_representation(self):
+        prop = Prop.objects.create(name="Prop 1")
+        self.assertEqual(str(prop), prop.name)
