@@ -312,7 +312,10 @@ class AdminPlayApiTests(TestCase):
     def test_actor_string_representation(self):
         actor = sample_actor(first_name="Benny", last_name="Hill")
         self.assertEqual(str(actor), f"{actor.first_name} {actor.last_name}")
-        self.assertEqual(actor.full_name, f"{actor.first_name} {actor.last_name}")
+        self.assertEqual(
+            actor.full_name,
+            f"{actor.first_name} {actor.last_name}"
+        )
 
     def test_genre_string_representation(self):
         genre = sample_genre(name="Drama")
