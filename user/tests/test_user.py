@@ -24,3 +24,16 @@ class UserTests(TestCase):
             str(cm.exception),
             "Superuser must have is_staff=True."
         )
+
+    def test_create_superuser_with_invalid_is_superuser_raise_valueerror(self):
+        with self.assertRaises(ValueError) as cm:
+            get_user_model().objects.create_superuser(
+                email="test@test",
+                password="testpassword",
+                is_superuser=False
+            )
+
+        self.assertEqual(
+            str(cm.exception),
+            "Superuser must have is_superuser=True."
+        )
