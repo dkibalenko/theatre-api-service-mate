@@ -51,3 +51,25 @@ class AuthenticatedReservationApiTests(TestCase):
         ]
         
         self.assertEqual(res.data["results"], expected_data)
+
+    def test_get_serializer_class_create(self):
+        ticket_data = {
+            "tickets": [
+                {
+                    "row": 5,
+                    "seat": 10,
+                    "performance": self.performance.id
+                }
+            ]
+        }
+        res = self.client.post(
+            reverse("theatre:reservation-list"),
+            data=ticket_data,
+            format="json"
+        )
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        reservation = Reservation.objects.get(id=res.data["id"])
+        serializer = ReservationSerializer(reservation)
+
+        self.assertEqual(res.data, serializer.data)
