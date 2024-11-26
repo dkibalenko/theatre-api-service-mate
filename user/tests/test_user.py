@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 from rest_framework.test import APITestCase
+from rest_framework import serializers
 
 from user.serializers import UserSerializer, AuthTokenSerializer
 
@@ -102,3 +103,19 @@ class AuthTokenSerializerTests(APITestCase):
         )
         self.assertFalse(serializer.is_valid())
         self.assertIn("non_field_errors", serializer.errors)
+
+    def test_auth_token_serializer_missing_email(self):
+        serializer = AuthTokenSerializer(
+            data={
+                "password": "testpassword"
+            }
+        )
+        self.assertFalse(serializer.is_valid())
+        with self.assertRaises(serializers.ValidationError):
+            serializer.is_valid(raise_exception=True)
+
+        self.assertIn("email", serializer.errors)
+        self.assertEqual(
+            serializer.errors["email"][0],
+            "This field is required."
+        )
