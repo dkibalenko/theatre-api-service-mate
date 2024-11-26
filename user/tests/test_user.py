@@ -74,3 +74,21 @@ class UserSerializerTests(APITestCase):
         updated_user = serializer.save()
         self.assertTrue(updated_user.check_password(payload["password"]))
         self.assertEqual(updated_user.email, payload["email"])
+
+
+class AuthTokenSerializerTests(APITestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            email="test@test.com",
+            password="testpassword"
+        )
+
+    def test_auth_token_serializer_valid_credentials(self):
+        serializer = AuthTokenSerializer(
+            data={
+                "email": "test@test.com",
+                "password": "testpassword"
+            }
+        )
+        self.assertTrue(serializer.is_valid())
+        self.assertEqual(serializer.validated_data["user"], self.user)
