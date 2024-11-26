@@ -119,3 +119,19 @@ class AuthTokenSerializerTests(APITestCase):
             serializer.errors["email"][0],
             "This field is required."
         )
+
+    def test_auth_token_serializer_missing_password(self):
+        serializer = AuthTokenSerializer(
+            data={
+                "email": "test@test.com"
+            }
+        )
+        self.assertFalse(serializer.is_valid())
+        with self.assertRaises(serializers.ValidationError):
+            serializer.is_valid(raise_exception=True)
+            
+        self.assertIn("password", serializer.errors)
+        self.assertEqual(
+            serializer.errors["password"][0],
+            "This field is required."
+        )
