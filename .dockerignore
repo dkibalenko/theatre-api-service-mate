@@ -1,5 +1,5 @@
 **/__pycache__
-**/.venv
+**/venv
 **/.classpath
 **/.dockerignore
 **/.env
@@ -27,4 +27,4 @@ LICENSE
 README.md
 .coverage
 coverage.xml
-**db.sqlite3
+db.sqlite3
