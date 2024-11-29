@@ -102,7 +102,7 @@ class PlayImageUploadTest(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_post_image_to_play_list(self):
+    def test_post_image_to_play_list_should_not_work(self):
         url = PLAY_LIST_URL
         with tempfile.NamedTemporaryFile(suffix=".jpg") as ntf:
             img = Image.new("RGB", (10, 10))
@@ -113,8 +113,6 @@ class PlayImageUploadTest(TestCase):
                 {
                     "title": "Title",
                     "description": "Description",
-                    "genres": [1],
-                    "actors": [1],
                     "image": ntf,
                 },
                 format="multipart",
