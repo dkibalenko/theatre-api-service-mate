@@ -11,3 +11,12 @@ RUN pip install -r requirements.txt
 WORKDIR /app
 
 COPY . .
+
+RUN mkdir -p /files/media
+
+RUN adduser --disabled-password --no-create-home django-user
+
+RUN chown -R django-user /files/media
+RUN chmod -R 755 /files/media
+
+USER django-user
