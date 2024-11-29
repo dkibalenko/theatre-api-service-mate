@@ -95,7 +95,7 @@ class PlayViewSet(
             return PlayImageSerializer
 
         return PlaySerializer
-    
+
     @action(
         methods=["POST"],
         detail=True,
@@ -110,7 +110,7 @@ class PlayViewSet(
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -175,12 +175,14 @@ class PerformanceViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return PerformanceListSerializer
-        if self.action == "retrieve" or self.action \
-            in ["update", "partial_update"]:
+        if self.action == "retrieve" or self.action in [
+            "update",
+            "partial_update"
+        ]:
             return PerformanceDetailSerializer
-        
+
         return PerformanceSerializer
-    
+
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -202,7 +204,7 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 
 class ReservationPagination(PageNumberPagination):
     page_size = 3
-    page_size_query_param = 'page_size'
+    page_size_query_param = "page_size"
     max_page_size = 100
 
 
@@ -222,13 +224,13 @@ class ReservationViewSet(
     def get_queryset(self):
         queryset = self.queryset.filter(user=self.request.user)
         return queryset
-    
+
     def get_serializer_class(self):
         if self.action == "list":
             return ReservationListSerializer
-        
+
         return ReservationSerializer
-    
+
     def perform_create(self, serializer):
         """
         Sets the user field of the created Reservation to the current user

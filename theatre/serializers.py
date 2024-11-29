@@ -12,6 +12,7 @@ from theatre.models import (
     Ticket
 )
 
+
 class ActorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Actor
@@ -123,7 +124,7 @@ class TicketSerializer(serializers.ModelSerializer):
         """
         Validates that the ticket's row and seat are within the range
         defined by its performance's theatre hall.
-        
+
         Raises a ValidationError if the ticket's row or seat are out of range.
         """
         data = super(TicketSerializer, self).validate(attrs=attrs)
@@ -138,6 +139,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
 class TicketListSerializer(TicketSerializer):
     performance = PerformanceListSerializer(many=False, read_only=True)
+
 
 class TicketSeatsSerializer(TicketSerializer):
     class Meta:
@@ -171,7 +173,7 @@ class PerformanceDetailSerializer(serializers.ModelSerializer):
             "taken_seats",
             "props",
         )
-    
+
     def update(self, instance, validated_data):
         props_data = validated_data.pop("props")
 

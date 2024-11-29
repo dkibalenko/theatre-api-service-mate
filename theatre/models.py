@@ -14,7 +14,7 @@ class Actor(models.Model):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
-    
+
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"
 
@@ -32,7 +32,7 @@ def play_image_file_path(instance, filename) -> str:
 
     return os.path.join("uploads/plays/", filename)
 
-    
+
 class Play(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -45,7 +45,7 @@ class Play(models.Model):
 
     def __str__(self) -> str:
         return self.title
-    
+
 
 class TheatreHall(models.Model):
     name = models.CharField(max_length=255)
@@ -70,7 +70,7 @@ class Performance(models.Model):
 
     def __str__(self) -> str:
         return f"{self.play} at {self.theatre_hall} at {self.show_time}"
-    
+
 
 class Prop(models.Model):
     name = models.CharField(max_length=255)
@@ -78,7 +78,7 @@ class Prop(models.Model):
         Performance,
         blank=True,
         related_name="props"
-)
+    )
 
     def __str__(self) -> str:
         return self.name
@@ -137,10 +137,10 @@ class Ticket(models.Model):
         """
         Validates that the ticket's row and seat are within the range
         defined by its performance's theatre hall.
-        
+
         Raises a ValidationError if the ticket's row or seat are out of range.
         """
-        
+
         Ticket.validate_ticket(
             self.row,
             self.seat,
