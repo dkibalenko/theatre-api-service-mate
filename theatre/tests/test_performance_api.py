@@ -168,6 +168,10 @@ class AuthenticatedPerformanceViewSetApiTests(TestCase):
         self.client.force_authenticate(self.user)
         self.play1 = sample_play(title="Play title 1")
         self.play2 = sample_play(title="Play title 2")
+        self.theatre_hall = TheatreHall.objects.create(
+            name="Test theatre hall",
+            rows=20, seats_in_row=20
+        )
         self.performances = [
             sample_performance(
                 show_time=f"2024-01-0{_} 12:00:00",
@@ -259,8 +263,8 @@ class AuthenticatedPerformanceViewSetApiTests(TestCase):
     def test_get_serializer_class_create_action(self):
         data = {
             "show_time": "2024-01-05 12:00:00",
-            "play": 1,
-            "theatre_hall": 1
+            "play": self.play1.id,
+            "theatre_hall": self.theatre_hall.id
         }
         res = self.client.post(PERFORMANCE_LIST_URL, data, format="json")
         performance = Performance.objects.get(show_time="2024-01-05 12:00:00")
