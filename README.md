@@ -20,6 +20,7 @@ This project is an API service for theatre management written on DRF.
 
 ## Installing with GitHub
 Install PostgreSQL and create a database.
+There is env.example file to see how to set environment variables.
 
   ```bash
   git clone https://github.com/dkibalenko/theatre-api-service-mate.git
