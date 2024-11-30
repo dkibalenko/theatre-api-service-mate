@@ -48,12 +48,12 @@ Install PostgreSQL and create a database.
   * Enter Test User credentials
 
 ## Test User
-  Email: admin@admin.com
-  Password: admin
+* Email: admin@admin.com
+* Password: admin
 
 ## Contributing
-Fork the repository
-Create a new branch (`git checkout -b <new_branch_name>`)
-Commit your changes (`git commit -am 'message'`)
-Push the branch to GitHub (`git push origin <new_branch_name>`)
-Create a new Pull Request
+* Fork the repository
+* Create a new branch (`git checkout -b <new_branch_name>`)
+* Commit your changes (`git commit -am 'message'`)
+* Push the branch to GitHub (`git push origin <new_branch_name>`)
+* Create a new Pull Request
