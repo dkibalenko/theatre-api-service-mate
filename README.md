@@ -58,3 +58,6 @@ There is env.example file to see how to set environment variables.
 * Commit your changes (`git commit -am 'message'`)
 * Push the branch to GitHub (`git push origin <new_branch_name>`)
 * Create a new Pull Request
+
+## **Database Schema**
+![Theatre Management Api Database Schema](theatre_API_service.png)
