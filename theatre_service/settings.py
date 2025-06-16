@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "theatre",
     "user",
     "debug_toolbar",
-    "rest_framework.authtoken",
+    "rest_framework_simplejwt",
     "drf_spectacular",
 ]
 
