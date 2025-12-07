@@ -1,0 +1,300 @@
+[
+  {
+    "model": "user.user",
+    "pk": 1,
+    "fields": {
+      "email": "alice@example.com",
+      "password": "pbkdf2_sha256$260000$examplehash1"
+    }
+  },
+  {
+    "model": "user.user",
+    "pk": 2,
+    "fields": {
+      "email": "bob@example.com",
+      "password": "pbkdf2_sha256$260000$examplehash2"
+    }
+  },
+  {
+    "model": "user.user",
+    "pk": 3,
+    "fields": {
+      "email": "charlie@example.com",
+      "password": "pbkdf2_sha256$260000$examplehash3"
+    }
+  },
+  {
+    "model": "user.user",
+    "pk": 4,
+    "fields": {
+      "email": "diana@example.com",
+      "password": "pbkdf2_sha256$260000$examplehash4"
+    }
+  },
+  {
+    "model": "user.user",
+    "pk": 5,
+    "fields": {
+      "email": "ethan@example.com",
+      "password": "pbkdf2_sha256$260000$examplehash5"
+    }
+  },
+  {
+    "model": "theatre.genre",
+    "pk": 1,
+    "fields": {
+      "name": "Comedy"
+    }
+  },
+  {
+    "model": "theatre.genre",
+    "pk": 2,
+    "fields": {
+      "name": "Drama"
+    }
+  },
+  {
+    "model": "theatre.genre",
+    "pk": 3,
+    "fields": {
+      "name": "Musical"
+    }
+  },
+  {
+    "model": "theatre.genre",
+    "pk": 4,
+    "fields": {
+      "name": "Tragedy"
+    }
+  },
+  {
+    "model": "theatre.actor",
+    "pk": 1,
+    "fields": {
+      "first_name": "Emma",
+      "last_name": "Stone"
+    }
+  },
+  {
+    "model": "theatre.actor",
+    "pk": 2,
+    "fields": {
+      "first_name": "Ryan",
+      "last_name": "Gosling"
+    }
+  },
+  {
+    "model": "theatre.actor",
+    "pk": 3,
+    "fields": {
+      "first_name": "Tom",
+      "last_name": "Hanks"
+    }
+  },
+  {
+    "model": "theatre.actor",
+    "pk": 4,
+    "fields": {
+      "first_name": "Meryl",
+      "last_name": "Streep"
+    }
+  },
+  {
+    "model": "theatre.play",
+    "pk": 1,
+    "fields": {
+      "title": "La La Land",
+      "description": "A musical love story set in Los Angeles.",
+      "image": "lala.jpg",
+      "genres": [
+        2,
+        3
+      ],
+      "actors": [
+        1,
+        2
+      ]
+    }
+  },
+  {
+    "model": "theatre.play",
+    "pk": 2,
+    "fields": {
+      "title": "A Midsummer Night's Dream",
+      "description": "Shakespeare's classic comedy of errors and magic.",
+      "image": "midsummer.jpg",
+      "genres": [
+        1,
+        2
+      ],
+      "actors": [
+        3
+      ]
+    }
+  },
+  {
+    "model": "theatre.play",
+    "pk": 3,
+    "fields": {
+      "title": "Death of a Salesman",
+      "description": "A tragic play about the American dream gone wrong.",
+      "image": "salesman.jpg",
+      "genres": [
+        2,
+        4
+      ],
+      "actors": [
+        4
+      ]
+    }
+  },
+  {
+    "model": "theatre.theatrehall",
+    "pk": 1,
+    "fields": {
+      "name": "Main Hall",
+      "rows": 15,
+      "seats_in_row": 25
+    }
+  },
+  {
+    "model": "theatre.theatrehall",
+    "pk": 2,
+    "fields": {
+      "name": "Studio Theatre",
+      "rows": 8,
+      "seats_in_row": 12
+    }
+  },
+  {
+    "model": "theatre.performance",
+    "pk": 1,
+    "fields": {
+      "play": 1,
+      "theatre_hall": 1,
+      "show_time": "2025-12-15T19:30:00Z"
+    }
+  },
+  {
+    "model": "theatre.performance",
+    "pk": 2,
+    "fields": {
+      "play": 2,
+      "theatre_hall": 2,
+      "show_time": "2025-12-16T18:00:00Z"
+    }
+  },
+  {
+    "model": "theatre.performance",
+    "pk": 3,
+    "fields": {
+      "play": 3,
+      "theatre_hall": 1,
+      "show_time": "2025-12-17T20:00:00Z"
+    }
+  },
+  {
+    "model": "theatre.reservation",
+    "pk": 1,
+    "fields": {
+      "created_at": "2025-12-01T10:00:00Z",
+      "user": 1
+    }
+  },
+  {
+    "model": "theatre.reservation",
+    "pk": 2,
+    "fields": {
+      "created_at": "2025-12-01T11:30:00Z",
+      "user": 2
+    }
+  },
+  {
+    "model": "theatre.reservation",
+    "pk": 3,
+    "fields": {
+      "created_at": "2025-12-02T09:00:00Z",
+      "user": 3
+    }
+  },
+  {
+    "model": "theatre.ticket",
+    "pk": 1,
+    "fields": {
+      "row": 1,
+      "seat": 5,
+      "performance": 1,
+      "reservation": 1
+    }
+  },
+  {
+    "model": "theatre.ticket",
+    "pk": 2,
+    "fields": {
+      "row": 1,
+      "seat": 6,
+      "performance": 1,
+      "reservation": 1
+    }
+  },
+  {
+    "model": "theatre.ticket",
+    "pk": 3,
+    "fields": {
+      "row": 5,
+      "seat": 10,
+      "performance": 1,
+      "reservation": 2
+    }
+  },
+  {
+    "model": "theatre.ticket",
+    "pk": 4,
+    "fields": {
+      "row": 5,
+      "seat": 11,
+      "performance": 1,
+      "reservation": 2
+    }
+  },
+  {
+    "model": "theatre.ticket",
+    "pk": 5,
+    "fields": {
+      "row": 2,
+      "seat": 3,
+      "performance": 2,
+      "reservation": 3
+    }
+  },
+  {
+    "model": "theatre.prop",
+    "pk": 1,
+    "fields": {
+      "name": "Piano",
+      "performance": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "theatre.prop",
+    "pk": 2,
+    "fields": {
+      "name": "Fairy Costume",
+      "performance": [
+        2
+      ]
+    }
+  },
+  {
+    "model": "theatre.prop",
+    "pk": 3,
+    "fields": {
+      "name": "Suitcase",
+      "performance": [
+        3
+      ]
+    }
+  }
+]

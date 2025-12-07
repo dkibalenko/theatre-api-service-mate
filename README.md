@@ -38,10 +38,22 @@ There is env.example file to see how to set environment variables.
   python manage.py runserver
   ```
 
-### Run with Docker
+## Running with Docker
+  * Copy .env.sample to .env and populate it with your environment variables
+
   ```bash
   docker compose build
   docker compose up
+  ```
+  * Bash into your Django container with backend app
+  ```bash
+  docker exec -it <your_django_container_name> bash
+  ```
+
+  * Populate the database & Run the `createsuperuser` Command:
+  ```bash
+  python manage.py loaddata sample_fixture.json
+  python manage.py createsuperuser
   ```
 
 ## Getting access
