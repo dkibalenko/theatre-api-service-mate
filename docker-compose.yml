@@ -33,9 +33,12 @@ services:
       - "${PGADMIN_PORT}:80"
     env_file:
       - .env
+    volumes:
+    - pgadmin_data:/var/lib/pgadmin
     depends_on:
       - db
 
 volumes:
   my_db:
   my_media:
+  pgadmin_data:
