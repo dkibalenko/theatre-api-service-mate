@@ -148,6 +148,12 @@ class PerformanceViewSet(viewsets.ModelViewSet):
     queryset = (
         Performance.objects.all()
         .select_related("play", "theatre_hall")
+        .prefetch_related(
+            "tickets",
+            "props",
+            "play__actors",
+            "play__genres"
+        )
         .annotate(
             tickets_available=(
                 F("theatre_hall__rows") * F("theatre_hall__seats_in_row")
