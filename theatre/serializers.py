@@ -122,12 +122,26 @@ class TicketSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         """
-        Validates that the ticket's row and seat are within the range
-        defined by its performance's theatre hall.
+        Validates the ticket data.
 
-        Raises a ValidationError if the ticket's row or seat are out of range.
+        First, it calls the parent class's validate method to check
+        the built-in constraints. Then, it calls the validate_ticket
+        method to check that the ticket's row and seat are within the
+        range defined by its performance's theatre hall.
+
+        Args:
+            attrs (dict): A dictionary of the ticket's data.
+
+        Returns:
+            dict: A dictionary of the validated ticket data.
+
+        Raises:
+            ValidationError: If the ticket's row or seat are out of range.
         """
+        # DRF’s built‑in validation first
         data = super(TicketSerializer, self).validate(attrs=attrs)
+
+        # Custom validation
         Ticket.validate_ticket(
             attrs["row"],
             attrs["seat"],
