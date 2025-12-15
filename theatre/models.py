@@ -26,7 +26,15 @@ class Genre(models.Model):
         return self.name
 
 
-def play_image_file_path(instance, filename) -> str:
+def play_image_file_path(instance: "Play", filename: str) -> str:
+    """
+    Returns a path for the image of a play to be stored in
+    according to the following format:
+    uploads/plays/<slugified-play-title>-<uuid4>{<file-extension>}
+
+    instance: the instance of the Play model
+    filename: the name of the image file
+    """
     _, extension = os.path.splitext(filename)
     filename = f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
 
@@ -118,6 +126,20 @@ class Ticket(models.Model):
 
     @staticmethod
     def validate_ticket(row, seat, theatre_hall, error_to_raise) -> None:
+        """
+        Validates a ticket's row and seat number against a theatre hall's
+        available row and seat range.
+
+        Args:
+            row (int): The row number of the ticket.
+            seat (int): The seat number of the ticket.
+            theatre_hall (TheatreHall): The theatre Hall associated with the ticket.
+            error_to_raise (Exception): The exception to raise if the ticket's
+                row or seat number is out of range.
+
+        Raises:
+            error_to_raise: If the ticket's row or seat number is out of range.
+        """
         for ticket_attr_value, ticket_attr_name, theatre_hall_attr_name in [
             (row, "row", "rows"),
             (seat, "seat", "seats_in_row"),
@@ -127,7 +149,7 @@ class Ticket(models.Model):
                 raise error_to_raise(
                     {
                         ticket_attr_name: f"{ticket_attr_name} "
-                        f"number must be in available range: "
+                        f"number must be in a available range: "
                         f"(1, {theatre_hall_attr_name}): "
                         f"(1, {count_attrs})"
                     }
@@ -155,6 +177,22 @@ class Ticket(models.Model):
         using=None,
         update_fields=None,
     ):
+        """
+        Ensures that the ticket's row and seat are valid before saving
+        the ticket. If the ticket's row or seat are out of range, raises a
+        ValidationError.
+
+        Args:
+            force_insert (bool): Whether to force an insert instead of
+                doing an update.
+            force_update (bool): Whether to force an update instead of
+                doing an insert.
+            using (str): The database alias to use for the save operation.
+            update_fields (list): A list of field names to update.
+
+        Returns:
+            Ticket: The saved ticket.
+        """
         self.full_clean()
         return super(Ticket, self).save(
             force_insert, force_update, using, update_fields
