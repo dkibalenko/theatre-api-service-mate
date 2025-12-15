@@ -84,7 +84,7 @@ class AuthenticatedTicketApiTests(TestCase):
         with self.assertRaises(ValidationError) as cm:
             ticket.clean()
         self.assertIn(
-            "row number must be in available range",
+            "row number must be in a available range",
             str(cm.exception)
         )
 
@@ -110,7 +110,7 @@ class AuthenticatedTicketApiTests(TestCase):
         with self.assertRaises(ValidationError) as cm:
             ticket.save()
         self.assertIn(
-            "row number must be in available range",
+            "row number must be in a available range",
             str(cm.exception)
         )
 
