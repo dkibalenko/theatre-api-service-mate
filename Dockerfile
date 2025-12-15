@@ -1,4 +1,5 @@
-FROM python:3.9-slim
+FROM python:3.11-slim
+
 LABEL maintainer="dennieking87@gmail.com"
 
 ENV PYTHONDONTWRITEBYTECODE=1
