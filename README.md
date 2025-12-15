@@ -1,21 +1,49 @@
 # Theatre API
 
 ## Introduction
-This project is an API service for theatre management written on DRF.
+A backend API service for theatre ticket reservations management written with Django, DRF & PostgreSQL.
 
 ## Features
-* Authentication with JWT
-* Authorization with permissions
-* Admin panel via /admin/
-* Image upload via /upload-image/
-* Swagger documentation via /api/doc/swagger/
-* Managing reservations and tickets
-* Creating plays with genres and actors
-* Creating plays, theatre halls
-* Creating performances
-* Managing props for individual performances
-* Filtering performances by date and play
-* Filtering plays by title, genre and actor
+### Authentication & Authorization
+- User registration and login with Django’s built‑in `User` model.
+  - Change `username` to `email` field, leave `password` field
+- Token‑based authentication via JWT (`djangorestframework-simplejwt`).
+- Role‑based access:
+  - Regular users can only see their own reservations.
+  - Admin/superusers can view all reservations.
+### Database & ORM
+- Models for `Play`, `Performance`, `TheatreHall`, `Reservation`, `Ticket`, `Actor`, `Genre`, `Prop`.
+- Relationships:
+  - FKs: `Performance` → `Play`, `Performance` → `TheatreHall`, `Ticket` → `Performance`, `Ticket` → `Reservation`.
+  - M2M: `Play` ↔ `Actor`, `Play` ↔ `Genre`, `Performance` ↔ `Prop`.
+- Constraints:
+  - `unique_together` on (row, seat, performance) for tickets.
+  - Validation logic ensuring seat/row ranges match the hall capacity.
+- Image upload via `/upload-image/`
+### Business Logic
+- Reservation creation automatically ties to the authenticated user (`perform_create`).
+- Ticket validation at multiple levels:
+  - Serializer validation (user‑friendly errors with `400 Bad Request`).
+  - Model validation (`clean` + `full_clean` raise `ValidationError`).
+  - Database constraint enforcement.
+- Automatic calculation of available seats via annotations.
+### API Layer (Django REST Framework)
+- ViewSets for `Performance` and `Reservation`.
+- Nested serializers for related objects (tickets, plays, halls, props).
+- Optimized queries with `select_related` and `prefetch_related` to avoid N+1 problems and Cartesian Product.
+- Filtering by `date` and `play` for performances.
+- Filtering plays by title, genre and actor.
+### Testing
+- Unit tests with Django’s `TestCase` and DRF’s `APIClient`.
+- 100% Test Coverage.
+- Validation of serializer outputs against expected data.
+### Developer Experience
+- Swagger Documentation: Endpoints are documented.
+- Dockerized environment with Postgres backend.
+- VS Code integration for test discovery and debugging.
+- Environment variables managed via .env for clean credential handling.
+
+* Admin panel via `/admin/`
 * Pagination reservations
 
 ## Installing with GitHub
