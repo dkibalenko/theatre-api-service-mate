@@ -228,8 +228,12 @@ class ReservationViewSet(
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        queryset = self.queryset.filter(user=self.request.user)
-        return queryset
+        user = self.request.user
+
+        if user.is_superuser or user.is_staff:
+            return self.queryset
+
+        return self.queryset.filter(user=user)
 
     def get_serializer_class(self):
         if self.action == "list":
