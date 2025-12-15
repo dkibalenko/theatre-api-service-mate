@@ -12,6 +12,7 @@ A backend API service for theatre ticket reservations management written with Dj
   - Regular users can only see their own reservations.
   - Admin/superusers can view all reservations.
 ### Database & ORM
+- PgAdmin Docker service for easy database management.
 - Models for `Play`, `Performance`, `TheatreHall`, `Reservation`, `Ticket`, `Actor`, `Genre`, `Prop`.
 - Relationships:
   - FKs: `Performance` → `Play`, `Performance` → `TheatreHall`, `Ticket` → `Performance`, `Ticket` → `Reservation`.
