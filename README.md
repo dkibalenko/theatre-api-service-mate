@@ -47,6 +47,23 @@ A backend API service for theatre ticket reservations management written with Dj
 * Admin panel via `/admin/`
 * Pagination reservations
 
+### Logout with (JWT Token Blacklisting)
+The API supports secure logout using JWT token blacklisting.
+When a user logs out, their refresh token is invalidated so it cannot be reused 
+to obtain new access tokens.
+
+How it works:
+- The endpoint (`/api/user/logout/`) requires JWT authentication (`IsAuthenticated`).
+- Clients must send the refresh token in the request body.
+- The token is added to Django SimpleJWT’s blacklist.
+- After blacklisting, the user receives a confirmation message.
+
+Notes
+
+- Logging out does not invalidate the current access token immediately,
+but prevents new ones from being issued.
+- Requires rest_framework_simplejwt.token_blacklist to be enabled in INSTALLED_APPS.
+
 ## Installing with GitHub
 Install PostgreSQL and create a database.
 There is env.example file to see how to set environment variables.
