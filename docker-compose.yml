@@ -38,6 +38,37 @@ services:
     depends_on:
       - db
 
+  redis:
+    image: "redis:alpine"
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "celery -A theatre_service worker -l INFO --pool=threads"
+    depends_on:
+      - theatre
+      - redis
+      - db
+    restart: on-failure
+    env_file:
+      - .env
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      sh -c "python manage.py wait_for_db &&
+            celery -A theatre_service beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    depends_on:
+      - theatre
+      - redis
+      - db
+    restart: on-failure
+    env_file:
+      - .env
+
 volumes:
   my_db:
   my_media:
