@@ -64,6 +64,24 @@ Notes
 but prevents new ones from being issued.
 - Requires rest_framework_simplejwt.token_blacklist to be enabled in INSTALLED_APPS.
 
+### Automatic Cleanup of Blacklisted JWT Tokens
+The project includes a background maintenance task that periodically removes 
+expired or blacklisted JWT refresh tokens from the database.
+This keeps the token blacklist table small, improves performance, and
+prevents unnecessary storage growth over time.
+
+How it works
+- A custom Django management command (`clean_blacklisted_tokens`) deletes all entries from the BlacklistedToken table.
+- A Celery task (`clean_blacklisted_tokens`) triggers this command.
+- Celery Beat schedules the task at regular intervals (configured in Django admin via `django‑celery‑beat`).
+- Redis is used as the message broker for Celery workers.
+
+Components involved
+- Celery Worker — executes the cleanup task in the background.
+- Celery Beat — schedules the periodic cleanup.
+- Redis — message broker for task distribution.
+- Django Management Command — performs the actual deletion of blacklisted tokens.
+
 ## Installing with GitHub
 Install PostgreSQL and create a database.
 There is env.example file to see how to set environment variables.
